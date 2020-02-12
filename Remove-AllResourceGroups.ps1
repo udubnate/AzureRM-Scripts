@@ -4,10 +4,20 @@
 # Install AzureRM cmdlets
 
 #Connect interactively (check if existing connection)
+[CmdletBinding()]
+param (
+    [Parameter()]
+    [String]
+    $SubscriptionId
+)
 
 $ARMContext =    Get-AzureRmContext -ErrorAction Continue
 if (-not $ARMContext){
+
     Connect-AzureRmAccount
+    if ($Subscription){
+        Select-AzureRmSubscription $SubscriptionId
+    } 
 } else {
     Write-Output $ARMContext
 }
