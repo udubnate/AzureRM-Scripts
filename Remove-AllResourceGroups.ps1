@@ -15,7 +15,7 @@ $ARMContext =    Get-AzureRmContext -ErrorAction Continue
 if (-not $ARMContext){
 
     Connect-AzureRmAccount
-    if ($Subscription){
+    if ($SubscriptionId){
         Select-AzureRmSubscription $SubscriptionId
     } 
 } else {
