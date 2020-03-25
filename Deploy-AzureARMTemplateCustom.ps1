@@ -16,6 +16,7 @@ param (
     [String]
     $location = "westus2",
     [Parameter()]
+    [ValidateLength(3, 15)]
     [String]
     $ComputerName
 
@@ -32,9 +33,24 @@ if (-not $ARMContext){
 $networkInterfaceName = "$ComputerName-NIC"
 $publicIpAddressName = "$ComputerName-IP"
 $networkSecurityGroupName = "$ComputerName-NSG"
-$diagnosticsStorageAccountName = $ResourceGroupName.ToLower() + "sa"
+$diagnosticsStorageAccountName = $ResourceGroupName.ToLower() + $location.Substring(0,10) + "sa"
 $diagnosticsStorageAccountId = "Microsoft.Storage/storageAccounts/$diagnosticsStorageAccountName"
+$virtualNetworkName = $ResourceGroupName.ToLower() + $location + "vnet"
 
-New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFilePath -TemplateParameterFile $ParameterFilePath `
- -networkInterfaceName $networkInterfaceName -networkSecurityGroupName $networkSecurityGroupName -publicIPAddressName $publicIpAddressName `
- -virtualMachineName $ComputerName -diagnosticsStorageAccountName $diagnosticsStorageAccountName -diagnosticsStorageAccountId $diagnosticsStorageAccountId -DeploymentDebugLogLevel All
+$DeploymentArgs = @{
+    Name = $ComputerName
+    ResourceGroupName = $ResourceGroupName
+    TemplateFile = $TemplateFilePath
+    TemplateParameterFile = $ParameterFilePath
+    networkInterfaceName = $networkInterfaceName
+    networkSecurityGroupName = $networkSecurityGroupName 
+    publicIPAddressName = $publicIpAddressName
+    virtualMachineName =  $ComputerName 
+    diagnosticsStorageAccountName = $diagnosticsStorageAccountName
+    diagnosticsStorageAccountId = $diagnosticsStorageAccountId
+    location = $location 
+    virtualNetworkName = $virtualNetworkName 
+    
+}
+
+New-AzResourceGroupDeployment @DeploymentArgs -DeploymentDebugLogLevel All
