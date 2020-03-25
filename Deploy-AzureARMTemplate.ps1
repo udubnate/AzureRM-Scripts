@@ -23,4 +23,4 @@ if (-not $ARMContext){
 }
 
 
-New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFilePath -TemplateParameterFile $ParameterFilePath
+New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFilePath -TemplateParameterFile $ParameterFilePath  -DeploymentDebugLogLevel All
